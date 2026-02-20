@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="day1226">
+	<sql id="empCommon">
+	 	select	ename, sal, comm, hiredate
+	 	from	emp
+	
+	</sql>
+	
+	
+	<!-- 
+		여러 조건에 의한 여러 컬럼이 조회.
+		-부서 번호와 사원 번호를 입력받아서, 사원명, 연봉, 보너스, 입사일을 검색
+		
+		ADTO = 입력값 -> where 절
+		BDTO = 조회값 -> 조회 컬럼
+	 -->
+	 <select id="useDomain" parameterType="empDTO" resultType="empDomain">
+	 	<include refid="empCommon" />
+	 	where	deptno=#{deptno} and empno=#{empno} 
+	 </select>
+	
+	<!-- like 
+		%는 PreparedStatement의 bind 변수와 함께 사용되면 인식하지 못 한다
+		동에 해당하는 우편번호ㅡ, 시도, 구군, 동, 번지 검색
+	-->
+	<resultMap type="zipDomain" id="zipResult">
+		<result column="ZIPCODE" property="zipcode"/>
+		<result column="SIDO" property="sido"/>
+		<result column="GUGUN" property="gugun"/>
+		<result column="DONG" property="dong"/>
+		<result column="BUNJI" property="bunji"/>
+	</resultMap>
+	<select id="like" parameterType="String" resultMap="zipResult">
+		select zipcode, sido, gugun, dong, bunji
+		from zipcode 
+		where dong like #{dong}||'%'
+	</select>
+	
+	<!-- < 작다
+		연봉을 입력받아 연봉보다 적게 받는 사원의 사원명, 연봉, 보너스, 입사일을 검색
+		특수문자(&lt;)를 사용하거나 CDATA Section(문자열 데이터 영역)을 사용하거나.
+	 -->
+		<select id="lessThan" parameterType="int" resultType="empDomain">
+			<include refid="empCommon" />
+		 	<![CDATA[
+		 		where	sal < ${sal}
+		 	]]>
+		</select>
+		<!-- <select id="lessThan" parameterType="int" resultType="empDomain">
+			select	ename, sal, comm, hiredate
+		 	from	emp
+		 	where	sal &lt; ${sal}
+		</select> -->
+		
+	<!-- > 크다
+		연봉을 입력받아 연봉보다 많이 받는 사원의 사원명, 연봉, 보너스, 입사일을 검색
+	 -->
+		<select id="greaterThan" parameterType="int" resultType="empDomain">
+			<include refid="empCommon" />
+		 	where	sal > ${sal}
+		</select>
+		
+	<!-- subquery 
+		사원 테이블에서 가장 마지막에 입사한 사원보다 먼저 입사한 사원부터
+		열 명의 사원 정보를 검색. 컴색 컬럼은 사원번호, 사원명, 연봉, 입사일
+	 -->
+		<select id="subquery" resultType="eaDomain">
+			<!-- select rnum, empno, ename, sal, hiredate
+			from(
+				select rownum rnum, empno, ename, sal, hiredate
+				from emp
+				<![CDATA[
+					where hiredate < (select max(hiredate) from emp)
+		 		]]>
+				order by hiredate desc
+			)
+			where rnum between 1 and 10; -->
+			
+			select empno, ename, sal, hiredate
+			from	(select empno, ename, sal, hiredate, row_number() over(order by hiredate desc) rnum
+				from emp)
+			where rnum between 2 and 11
+			
+		</select>
+	
+	<!-- union: 여러 테이블을 위에서 아래로 붙일 때 사용
+		emp - 본사, cp_emp5 - 지사
+		본사와 지사의 모든 사원 검색
+		사원번호, 사원명, 직무, 매니저번호, 입사일, 연봉, 부서번호
+	 -->
+	<select id="union" resultType="eaDomain">
+		select empno, ename, job, mgr, hiredate, sal, deptno, '본사' officeType
+		from emp
+		union all
+		select empno, ename, job, mgr, hiredate, sal, deptno, '지사' officeType
+		from cp_emp5
+		
+	</select>
+	
+	<!-- join: 여러 테이블을 옆으로 붙여서 조회할 때 사용
+		보유중인 모든 차량의 제조사, 모델명, 연식, 가격, 배기량, 입력일 조회
+	 -->
+	<select id="join" resultType="cmoDomain">
+		select	 	cma.maker, cma.model, cmo.car_year, cmo.price, cmo.cc, cmo.car_img, cmo.input_date
+		from	 	car_maker cma, car_model cmo
+		where	 	cmo.model = cma.model
+		order by	cmo.input_date desc
+	</select>
+	
+	<!-- subquery & join -->
+	
+	<!-- $의 사용 -->
+	
+	<!-- dynamic query: if -->
+	
+	<!-- dynamic query: choose -->
+	
+	<!-- dynamic query: forEach -->
+	
+	<!-- dynamic query: set -->
+	
+	<!-- PL/SQL insert, update, delete, cursor -->
+	
+</mapper>

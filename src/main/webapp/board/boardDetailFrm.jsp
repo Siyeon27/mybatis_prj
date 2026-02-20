@@ -1,4 +1,4 @@
-<%@page import="kr.co.sist.board.BoardDTO"%>
+<%@page import="kr.co.sist.board.BoardDomain"%>
 <%@page import="kr.co.sist.board.BoardService"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
@@ -13,10 +13,10 @@ if( num != null){//입력된 번호가 있다면
 		int tempNum=Integer.parseInt(num);
 		Object obj=session.getAttribute(String.valueOf(tempNum));
 		if(obj == null){
-			bs.modifyBoardCnt(tempNum); //세션에 값이 없을 때에만 카운트를 올림.
+	bs.modifyBoardCnt(tempNum); //세션에 값이 없을 때에만 카운트를 올림.
 		}//end if
-			
-		BoardDTO bDTO=bs.searchOneBoard(tempNum);//게시글 하나 읽기
+	
+		BoardDomain bDTO=bs.searchOneBoard(tempNum);//게시글 하나 읽기
 		
 		//해당 글번호의 글을 읽었음 저장.
 		session.setAttribute(String.valueOf(tempNum), true);
@@ -160,11 +160,13 @@ $(function(){
 					</tr>
 					<tr>
 					<td colspan="2" style="text-align: center;">
-						<c:if test="${ sessionScope.userId eq bDTO.id}">
+						<%-- <c:if test="${ sessionScope.userId eq bDTO.id}"> --%>
 						<input type="hidden" name="num" value="${ param.num }"/>
+						<!-- 작성자의 아이디를 그냥 넣음 -->
+						<input type="hidden" name="id" value="${ bDTO.id }"/>
 						<button onclick="return false" class="btn btn-success" id="btnModify">글수정</button>
 						<button onclick="return false" class="btn btn-success" id="btnDelete">글삭제</button>
-						</c:if>
+						<%-- </c:if> --%>
 						<a href="boardList.jsp?currentPage=${ param.currentPage }" class="btn btn-info" >리스트</a>
 					</td>
 					</tr>

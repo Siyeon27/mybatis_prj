@@ -6,6 +6,21 @@
 <properties resource="properties/database.properties" />
   <typeAliases>
 	<typeAlias type="day1224.EmpDTO" alias="eDTO"/>
+	<typeAlias type="day1226.EmpDTO" alias="empDTO"/>
+	<typeAlias type="day1226.EmpDomain" alias="empDomain"/>
+	<!-- 우편번호 검색 결과를 저장할 Domain -->
+	<typeAlias type="day1226.ZipcodeDomain" alias="zipDomain"/>
+	<typeAlias type="day1226.EmpAllDomain" alias="eaDomain"/>
+	<typeAlias type="day1226.CarModelDomain" alias="cmoDomain"/>
+	<typeAlias type="day1230.TransactionDTO" alias="TransactionDTO"/>
+	<typeAlias type="day1231.MemberDTO" alias="memberDTO"/>
+	<!-- 게시판에서 사용할 DTO, Domain -->
+		<!-- 검색에 사용할 Domain -->
+	<typeAlias type="kr.co.sist.board.BoardDomain" alias="boardDomain"/>
+		<!-- 추가/삭제/변경에 사용할 DTO -->
+	<typeAlias type="kr.co.sist.board.BoardDTO" alias="boardDTO"/>
+		<!-- 검색에 사용할 DTO -->
+	<typeAlias type="kr.co.sist.board.RangeDTO" alias="rangeDTO"/>
   </typeAliases>
   <environments default="development">
     <environment id="development">
@@ -23,7 +38,12 @@
     <mapper resource="day1223/examMapper.xml"/><!-- insert 연습 -->
     <mapper resource="day1224/examMapper2.xml"/><!-- update, delete 연습 -->
     <mapper resource="day1224/examMapper3.xml"/><!-- select 연습 -->
+    <mapper resource="day1226/examMapper4.xml"/><!-- select 연습2 -->
+    <mapper resource="day1229/examMapper5.xml"/><!-- select 연습2 -->
+    <mapper resource="day1230/examMapper6.xml"/><!-- select 연습2 -->
+    <mapper resource="day1231/examMapper7.xml"/><!-- select 연습2 -->
     
     <mapper resource="kr/co/sist/board/boardMapper.xml"/><!-- 게시판 쿼리 -->
+    <mapper resource="kr/co/sist/car/carMapper.xml"/><!-- car -->
   </mappers>
 </configuration>

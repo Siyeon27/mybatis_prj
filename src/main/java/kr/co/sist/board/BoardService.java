@@ -3,8 +3,6 @@ package kr.co.sist.board;
 import java.sql.SQLException;
 import java.util.List;
 
-import javax.print.attribute.standard.PagesPerMinute;
-
 import org.apache.ibatis.exceptions.PersistenceException;
 
 public class BoardService {
@@ -95,8 +93,8 @@ public class BoardService {
 	 * @param rDTO
 	 * @return
 	 */
-	public List<BoardDTO> searchBoardList( RangeDTO rDTO){
-		List<BoardDTO> list=null;
+	public List<BoardDomain> searchBoardList( RangeDTO rDTO){
+		List<BoardDomain> list=null;
 		
 		BoardDAO bDAO=BoardDAO.getInstance();
 		try {
@@ -112,9 +110,9 @@ public class BoardService {
 	 * 제목이 20자를 초과하면 19자까지 보여주고 뒤에 ...을 붙이는 일
 	 * @param list
 	 */
-	public void titleSubStr(List<BoardDTO> boardList) {
+	public void titleSubStr(List<BoardDomain> boardList) {
 		String title="";
-		for(BoardDTO bDTO:boardList){
+		for(BoardDomain bDTO:boardList){
 			title=bDTO.getTitle();
 			if(title.length() > 19){
 				bDTO.setTitle(title.substring(0,20)+"...");
@@ -294,8 +292,8 @@ public class BoardService {
 	 * @param num
 	 * @return
 	 */
-	public BoardDTO searchOneBoard( int num ) {
-		BoardDTO bDTO=null;
+	public BoardDomain searchOneBoard( int num ) {
+		BoardDomain bDTO=null;
 		BoardDAO bDAO=BoardDAO.getInstance();
 		try {
 			bDTO=bDAO.selectBoardDetail(num);

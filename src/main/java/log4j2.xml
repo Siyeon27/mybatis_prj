@@ -29,7 +29,7 @@
     </Appenders>
 
     <loggers>
-        <root level="fatal" additivity="true">
+        <root level="trace" additivity="true">
             <AppenderRef ref="console"/>
             <AppenderRef ref="RollingFile" />
         </root>
